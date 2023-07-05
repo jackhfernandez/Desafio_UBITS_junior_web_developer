@@ -21,13 +21,13 @@ Primero debes clonar el reto en tu maquina para que puedas acceder a la informac
 **Si tienes configurada una llave SSH**
 
 ```bash
-git clone git@github.com:buty619/Desafio_UBITS_junior_web_developer.git
+git clone git@github.com:Ubits-Desarrollo-Web/Desafio_UBITS_junior_web_developer.git
 ```
 
 **para clonarlo por HTTPS**
 
 ```bash
-git clone https://github.com/buty619/Desafio_UBITS_junior_web_developer.git
+git clone https://github.com/Ubits-Desarrollo-Web/Desafio_UBITS_junior_web_developer.git
 ```
 
 ### 2. Instalar dependencias
