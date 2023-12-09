@@ -3,14 +3,16 @@
 
 // 1.1 obtener de los query params los valores del nombre y precio del plan comprado para esto
 // se puede utilizar el metodo URLSearchParams y el window.location.search
-const urlParams = ...;
-const planName = ...;
-const planPrice = ..;
+const urlParams = new URLSearchParams(window.location.search);
+const planName = urlParams.get("name");
+const planPrice = urlParams.get("price");
 
 const init = async () => {
   // 1.2 inyecta los valores obtenidos en los `billing_details`.
-  const billingDetails = ...;
-  const billingDetailsSpan = ...;
+  const billingDetails = document.querySelector(".billing_details");
+  const billingDetailsSpan = billingDetails.querySelectorAll("span");
+  billingDetailsSpan[0].innerHTML = planName;
+  billingDetailsSpan[1].innerHTML = planPrice;
 };
 
 init();
@@ -20,12 +22,12 @@ init();
 // asi como la card en la cual se inyectaran los valores del formulario para generar un efecto
 // de interactividad.
 
-const form = ...;
-const name = ...;
-const number = ...;
-const date = ...;
-const cvv = ...;
-const visa = ...;
+const form = document.querySelector(".form");
+const name = document.getElementById("name");
+const number = document.getElementById("number");
+const date = document.getElementById("date");
+const cvv = document.getElementById("cvv");
+const visa = document.querySelector(".card");
 
 // 3. crea una funcion showError que acepte 2 parametros, el primero el elemento HTML que tiene
 // un error en su valor (ejemplo: una tarjeta de credito de menos de 19 caracteres) y el segundo
@@ -33,12 +35,12 @@ const visa = ...;
 // cambiar el opacity a uno del elemento inyectado a la función `showError`, de lo contrario cambiar
 // el calor del opacity a cero.
 
-/*  SHOW ERROR  */
+//  SHOW ERROR
 function showError(element, error) {
   if (error === true) {
-    ...
+    element.style.opacity = "1";
   } else {
-    ...
+    element.style.opacity = "0";
   }
 }
 
@@ -47,12 +49,12 @@ function showError(element, error) {
 // se use el metodo showError para mostrar el error, ademas de esto inyecta el valor de este input en el
 // elemento `card-name`
 
-/*  CHANGE THE FORMAT NAME  */
+//  CHANGE THE FORMAT NAME
 name.addEventListener("input", function (e) {
-  let alert1 = ...;
-  let error = ...;
+  let alert1 = document.getElementById("alert-1");
+  let error = e.target.value === "";
   showError(alert1, error);
-  document.getElementById("card-name").textContent = ...;
+  document.getElementById("card-name").textContent = e.target.value;
 });
 
 // 5. agrega en event listener al input numbre (numero de la credit card) donde se ejecute en la acción 'input'
@@ -61,14 +63,15 @@ name.addEventListener("input", function (e) {
 // para poner el valor de number input en el formato esperado de la credit card y luego inyecta este valor en el
 // elemento `card__number`
 
-/*  CHANGE THE FORMAT CARD NUMBER*/
+//  CHANGE THE FORMAT CARD NUMBER
 number.addEventListener("input", function (e) {
   e.target.value = numberAutoFormat(number.value);
 
   //show error when is different of 16 numbers and 3 white space
-  let error = ...;
-  let alert2 = ...;
+  let error = e.target.value.length !== 19;
+  let alert2 = document.getElementById("alert-2");
   showError(alert2, error);
+  document.querySelector(".card__number").textContent = this.value;
 });
 
 function numberAutoFormat(valueNumber) {
@@ -76,7 +79,7 @@ function numberAutoFormat(valueNumber) {
   let v = valueNumber.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
 
   // separar los valores en grupos de 4 numeros
-  let matches = ...;
+  let matches = v.match(/\d{4,16}/g);
   let match = (matches && matches[0]) || "";
   let parts = [];
 
@@ -100,20 +103,20 @@ function numberAutoFormat(valueNumber) {
 // la función `dateAutoFormat` para poner el valor de la fecha en el formato esperado  y luego inyecta este valor en el
 // elemento `month` y `year`
 
-/*  CHANGE THE FORMAT DATE  */
+//  CHANGE THE FORMAT DATE 
 date.addEventListener("input", function (e) {
   e.target.value = dateAutoFormat(e.target.value);
   // show error if is not a valid date
-  let alert3 = ...;
+  let alert3 = document.getElementById("alert-3");
   showError(alert3, isNotDate(this));
   let dateNumber = date.value.match(/\d{2,4}/g);
-  document.getElementById("month").textContent = ...;
-  document.getElementById("year").textContent = ...;
+  document.getElementById("month").textContent = dateNumber[0];
+  document.getElementById("year").textContent = dateNumber[1];
 });
 
 function dateAutoFormat(dateValue) {
   // 6.1 agrega la expresion regular o logica que elimine espacios en blanco y luego caracteres no numericos.
-  let v = dateValue.replace(...).replace(...);
+  let v = dateValue.replace(/\s+/g, "").replace(/[^0-9]/gi, "");
 
   // min of 2 digits and max of 4
   let matches = v.match(/\d{2,4}/g);
@@ -132,11 +135,11 @@ function dateAutoFormat(dateValue) {
 }
 
 function isNotDate(element) {
-  let actualDate = ...;
+  let actualDate = new Date();
   // 6.2 arregla esta expresion para obtener el numero del mes real
-  let month = ...;
+  let month = actualDate.getMonth() + 1;
   // 6.3 arregla esta expresion para obtener los ultimos dos digitos del año dado
-  let year = ...; // 2022 -> 22
+  let year = Number(actualDate.getFullYear().toString().substr(-2)) // 2022 -> 22
   let dateNumber = element.value.match(/\d{2,4}/g);
   let monthNumber = Number(dateNumber[0]);
   let yearNumber = Number(dateNumber[1]);
@@ -158,9 +161,11 @@ function isNotDate(element) {
 // dentro de esta función debes capturar el elemento `alert-4` y si el valor del input es menor a 3 (value.length < 3;)
 // se use el metodo showError para mostrar el error.
 
-/*  CHANGE THE FORMAT CVV  */
+//  CHANGE THE FORMAT CVV
 cvv.addEventListener("input", function (e) {
-  ...
+    let alert4 = document.getElementById("alert-4");
+    let error = this.value.length < 3;
+    showError(alert4, error);
 });
 
 // 8. agrega el evento `submit` al form tag para completar la compra del paquete para esto
@@ -171,10 +176,10 @@ cvv.addEventListener("input", function (e) {
 // envies en lso query params el nombre del comprador, el nombre del plan comprado y
 // el precio del plan comprado.
 
-/*  VALIDATION FORM WHEN PRESS THE BUTTON   */
+// VALIDATION FORM WHEN PRESS THE BUTTON
 form.addEventListener("submit", function (e) {
   // 1. if any input is empty show the alert of that input
-  let inputs = ...;
+  let inputs = document.querySelectorAll("input");
   for (let i = 0; i < inputs.length; i++) {
     if (inputs[i].value === "") {
       inputs[i].nextElementSibling.style.opacity = "1";
@@ -182,11 +187,17 @@ form.addEventListener("submit", function (e) {
   }
   if (
       // 2. si no hay ningún nombre
+      name.value === "" ||
       // 3. si la longitud de la tarjeta de número no es válida (16 números y 3 espacios en blanco)
+      number.value.length !== 19 ||
       // 4. si no es una fecha valida (4 numero y "/" o no es una fecha valida)
+      isNotDate(date) === true ||
       // 5. si no es un cvv valido
+      cvv.value.length < 3
   ) {
     return;
   }
-  window.location...;
+  window.location.assign(
+    `/bill.html?name=${name.value}&planName=&price=${planPrice}`
+  );
 });
